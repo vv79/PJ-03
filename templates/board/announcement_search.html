@@ -1,18 +1,15 @@
-{% extends 'flatpages/default.html' %}
+{% extends '_base.html' %}
 
 {% load bootstrap4 %}
-{% load i18n %}
-
-{% block title %}{% blocktranslate asvar page_title %}News search{% endblocktranslate %}{% endblock title %}
 
 {% block content %}
-<h1>{{ page_title }}</h1>
+<h1>{% block title %}Announcement search{% endblock title %}</h1>
 <hr>
-<form action="/news" method="get" >
+<form action="{% url 'announcement_list' %}" method="get" >
     {% bootstrap_form filter.form %}
     {% buttons %}
-        <button type="submit" class="btn btn-primary">{% translate 'Search' %}</button>
-        <a class="btn btn-secondary" href="{% url 'news_list' %}">{% translate 'Cancel' %}</a>
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a class="btn btn-secondary" href="{% url 'announcement_list' %}">Cancel</a>
     {% endbuttons %}
 </form>
 {% endblock content %}

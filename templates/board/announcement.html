@@ -1,19 +1,17 @@
-{% extends 'flatpages/default.html' %}
+{% extends '_base.html' %}
 
-{% load custom_filters %}
-{% load i18n %}
 {% load tz %}
-{% get_current_timezone as TIME_ZONE %}
 
-{% block title %}{% translate 'News detail' %}{% endblock title %}
+{% block title %}Announcement details{% endblock title %}
 
 {% block content %}
-<h1>{{ news.title|censor }}</h1>
-<hr />
-    <h3>{{ news.date_created|timezone:TIME_ZONE|date:"d M Y" }}</h3>
-<hr />
-    <a href="{% url 'news_edit' pk=news.id %}" class="btn btn-primary">{% translate 'Edit' %}</a>
-    <a href="{% url 'news_delete' pk=news.id %}" class="btn btn-danger">{% translate 'Delete' %}</a>
-<hr />
-{{ news.content|censor }}
+    <h1>{{ announcement.title }}</h1>
+    <hr />
+    <h3>{{ announcement.date_created|date:"d M Y" }}</h3>
+    <hr />
+    <a href="{% url 'response_create' announcement=announcement.id %}" class="btn btn-success">Create response</a>
+    <a href="{% url 'announcement_edit' pk=announcement.id %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'announcement_delete' pk=announcement.id %}" class="btn btn-danger">Delete</a>
+    <hr />
+    {{ announcement.content }}
 {% endblock content %}

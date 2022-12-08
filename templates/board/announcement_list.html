@@ -2,16 +2,16 @@
 
 {% load tz %}
 
-{% block title %}
-    {% if category %}
-        "{{ category.name }}" news
-    {% else %}
-        All news
-    {% endif %}
-{% endblock title %}
-
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>
+    {% block title %}
+        {% if category %}
+            "{{ category.name }}" announcements
+        {% else %}
+            All announcements
+        {% endif %}
+    {% endblock title %}
+</h1>
 <hr>
     {% if category %}
         <a href="{% url 'announcement_list' %}" class="btn btn-primary">Show all announcements</a>
@@ -21,7 +21,7 @@
             <a href="{% url 'announcement_category_subscribe' category=category.id %}" class="btn btn-success float-end">Subscribe</a>
         {% endif %}
     {% else %}
-        <a href="{% url 'news_create' %}" class="btn btn-success">Add announcement</a>
+        <a href="{% url 'announcement_create' %}" class="btn btn-success">Add announcement</a>
         {% if not filter.is_applied %}
         <a href="{% url 'announcement_search' %}" class="btn btn-primary float-end">Search</a>
         {% else %}
@@ -41,14 +41,14 @@
    </tr>
     {% for announcement in announcement_list %}
     <tr>
-        <td><a href="{% url 'news_detail' pk=news.id %}">{{ announcement.title }}</a></td>
-        <td>{{ announcement.date_created|timezone:TIME_ZONE|date:"d M Y H:i" }}</td>
+        <td><a href="{% url 'announcement_detail' pk=announcement.id %}">{{ announcement.title }}</a></td>
+        <td>{{ announcement.date_created|date:"d M Y H:i" }}</td>
         <td>
             <a href="{% url 'announcement_category' category=announcement.category.id %}">{{ announcement.category.name }}</a>
         </td>
         <td>{{ announcement.content|truncatewords:20 }}</td>
-        <td nowrap><a href="{% url 'announcement_edit' pk=news.id %}">[ 'Edit' ]</a></td>
-        <td nowrap><a href="{% url 'announcement_delete' pk=news.id %}" class="text-danger small">[ Delete ]</a></td>
+        <td nowrap><a href="{% url 'announcement_edit' pk=announcement.id %}" class="small">[ Edit ]</a></td>
+        <td nowrap><a href="{% url 'announcement_delete' pk=announcement.id %}" class="text-danger small">[ Delete ]</a></td>
     </tr>
     {% endfor %}
 </table>

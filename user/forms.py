@@ -1,7 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.contrib.auth.models import User
-from allauth.account.forms import SignupForm
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User, Group
+from .models import RegistrationToken
 from django import forms
 from django.urls import reverse_lazy
 
@@ -22,17 +21,13 @@ class BaseSignupForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save()
+        user.active = False
         common_group = Group.objects.get(name='common')
         common_group.user_set.add(user)
-        return user
 
+        registration_token = RegistrationToken.objects.create(user=user)
+        registration_token.save()
 
-class SocialSignupForm(SignupForm):
-
-    def save(self, request):
-        user = super(SocialSignupForm, self).save(request)
-        common_group = Group.objects.get(name='common')
-        common_group.user_set.add(user)
         return user
 
 

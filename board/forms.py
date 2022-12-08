@@ -1,18 +1,26 @@
 from django import forms
-from .models import Post, Category
-from django.utils.translation import gettext_lazy as _
+from .models import Announcement, Category, Response
 
 
-class PostForm(forms.ModelForm):
-    categories = forms.SelectMultiple(
+class AnnouncementForm(forms.ModelForm):
+    category = forms.Select(
         choices=Category.objects.all()
     )
 
     class Meta:
-        model = Post
-        fields = ['title', 'content', 'categories']
+        model = Announcement
+        fields = ['title', 'content', 'category']
         labels = {
-            "title": _("Title"),
-            "content": _("Content"),
-            "categories": _("Categories"),
+            "title": "Title",
+            "content": "Content",
+            "categories": "Categories",
+        }
+
+
+class ResponseForm(forms.ModelForm):
+    class Meta:
+        model = Response
+        fields = ['content']
+        labels = {
+            "content": "Content",
         }

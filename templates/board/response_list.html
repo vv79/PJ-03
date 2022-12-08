@@ -2,58 +2,41 @@
 
 {% load tz %}
 
-{% block title %}
-    {% if category %}
-        "{{ category.name }}" announcements
-    {% else %}
-        All announcements
-    {% endif %}
-{% endblock title %}
-
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>{% block title %}Response list{% endblock title %}</h1>
 <hr>
-    {% if category %}
-        <a href="{% url 'announcement_list' %}" class="btn btn-primary">Show all announcements</a>
-        {% if already_subscribed %}
-            <a href="{% url 'announcement_category_unsubscribe' category=category.id %}" class="btn btn-danger float-end">Unsubscribe</a>
-        {% else %}
-            <a href="{% url 'announcement_category_subscribe' category=category.id %}" class="btn btn-success float-end">Subscribe</a>
-        {% endif %}
-    {% else %}
-        <a href="{% url 'announcement_create' %}" class="btn btn-success">Add announcement</a>
-        {% if not filter.is_applied %}
-        <a href="{% url 'announcement_search' %}" class="btn btn-primary float-end">Search</a>
-        {% else %}
-        <a href="{% url 'announcement_list' %}" class="btn btn-danger float-end">Reset filter</a>
-        {% endif %}
-    {% endif %}
-<hr>
-{% if announcement_list %}
+{% if announcement %}
+    <a href="{% url 'response_list' %}" class="btn btn-primary">Show all responses</a>
+    <hr />
+{% endif %}
+{% if response_list %}
 <table width="100%">
     <tr>
-        <th width="250">Title</th>
-        <th width="150">Date</th>
-        <th width="200">Category</th>
         <th width="*">Description</th>
+        <th width="*">Announcement</th>
+        <th width="150">Date</th>
         <th width="50"></th>
         <th width="65"></th>
    </tr>
-    {% for announcement in announcement_list %}
+    {% for response in response_list %}
     <tr>
-        <td><a href="{% url 'announcement_detail' pk=announcement.id %}">{{ announcement.title }}</a></td>
-        <td>{{ announcement.date_created|date:"d M Y H:i" }}</td>
         <td>
-            <a href="{% url 'announcement_category' category=announcement.category.id %}">{{ announcement.category.name }}</a>
+            <a href="{% url 'response_detail' pk=response.id %}">{{ response.content|truncatewords:20 }}</a>
         </td>
-        <td>{{ announcement.content|truncatewords:20 }}</td>
-        <td nowrap><a href="{% url 'announcement_edit' pk=announcement.id %}" class="small">[ Edit ]</a></td>
-        <td nowrap><a href="{% url 'announcement_delete' pk=announcement.id %}" class="text-danger small">[ Delete ]</a></td>
+        <td>
+            <a href="{% url 'response_announcement' announcement=response.announcement.id %}">{{ response.announcement.title }}</a>
+        </td>
+        <td>{{ response.date_created|date:"d M Y H:i" }}</td>
+
+        {% if not response.approved %}
+        <td nowrap><a href="{% url 'response_approve' pk=response.id %}" class="small">[ Approve ]</a></td>
+        <td nowrap><a href="{% url 'response_delete' pk=response.id %}" class="text-danger small">[ Delete ]</a></td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>
 {% else %}
-   <h2>No announcements yet.</h2>
+   <h2>No response yet.</h2>
 {% endif %}
 {% include "_pagination.html" %}
 {% endblock content %}

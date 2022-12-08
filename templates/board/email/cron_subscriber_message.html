@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+</head>
+<body>
+    <h1>Hi {{ username }}!</h1>
+    <h3>{{ subject }}</h3>
+    {% for announcement in announcements %}
+    <div style="padding: 0 3px">
+        <h5><a href="{% url route pk=announcement.id %}">{{ announcement.title }}</a></h5>
+        <p>{{ announcement.content|truncatechars:50 }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>

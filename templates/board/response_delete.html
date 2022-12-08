@@ -2,18 +2,16 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Announcement delete{% endblock title %}
-
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>{% block title %}Response delete{% endblock title %}</h1>
 <hr>
 <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <p>Are you sure you want to delete the announcement "{{ announcement.title }}"?</p>
+    <p>Are you sure you want to delete this response?</p>
     {% buttons %}
         <button type="submit" class="btn btn-danger">Delete</button>
-        <a href="{% url 'announcement_list' %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'response_list' %}" class="btn btn-secondary">Cancel</a>
     {% endbuttons %}
 </form>
 {% endblock content %}
