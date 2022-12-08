@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+</head>
+<body>
+    <h1>Hi {{ username }}!</h1>
+    <h3>{{ subject }}</h3>
+    <p>Thank you for joining our announcement board!</p>
+    <p>
+        To complete your registration and verify your email address, please follow the link below:<br />
+        <a href="{{ confirmationUrl }}" target="_blank">{{ confirmationUrl }}</a>
+    </p>
+</body>
+</html>

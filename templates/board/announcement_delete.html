@@ -1,0 +1,20 @@
+{% extends 'flatpages/default.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block title %}{% blocktranslate asvar page_title %}News delete{% endblocktranslate %}{% endblock title %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <p>{% blocktranslate %}Are you sure you want to delete the news "{{ post.title }}"?{% endblocktranslate %}</p>
+    {% buttons %}
+        <button type="submit" class="btn btn-danger">{% translate 'Delete' %}</button>
+        <a href="{% url 'news_list' %}" class="btn btn-secondary">{% translate 'Cancel' %}</a>
+    {% endbuttons %}
+</form>
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends 'flatpages/default.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block title %}{% blocktranslate asvar page_title %}Profile{% endblocktranslate %}{% endblock title %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+<hr />
+{% if user_is_author %}
+<a href="{% url 'downgrade_user' %}" class="btn btn-danger">
+    <i class="fa-solid fa-chevrons-down"></i>
+    {% translate 'Become a simple user' %}
+</a>
+{% else %}
+<a href="{% url 'upgrade_user' %}" class="btn btn-primary">
+    <i class="fa-solid fa-chevrons-up"></i>
+    {% translate 'Become an author' %}
+</a>
+{% endif %}
+<hr />
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">{% translate 'Save' %}</button>
+        <a href="{% url 'homepage' %}" class="btn btn-secondary">{% translate 'Cancel' %}</a>
+    {% endbuttons %}
+</form>
+{% endblock %}

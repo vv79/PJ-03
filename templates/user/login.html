@@ -1,0 +1,19 @@
+{% extends 'flatpages/default.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block title %}{% translate 'Authentication' %}{% endblock title %}
+
+{% block content %}
+<h2>{% translate 'Authentication' %}</h2>
+<hr />
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">{% translate 'Login' %}</button>
+        <a href="{% url 'signup' %}" class="btn btn-secondary">{% translate 'Sign Up' %}</a>
+    {% endbuttons %}
+</form>
+{% endblock %}

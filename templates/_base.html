@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>{% block title %} {% endblock title %}</title>
+        {% load static %}
+        {% load bootstrap4 %}
+        {% load i18n %}
+        {% load tz %}
+        {% get_current_timezone as TIME_ZONE %}
+        {% load custom_filters %}
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery='full' %}
+    </head>
+    <body style="background-color: {% if current_time.hour >= 19 or current_time.hour <= 7 %}darkcyan{% else %}cyan{% endif %};">
+        {% load cache %}
+        {% block menu %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+            <div class="container">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% cache 86400 menu_main_block LANGUAGE_CODE request.resolver_match.view_name %}
+                <a class="navbar-brand" href="#">{% translate 'News Paper' %}</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link{% if request.resolver_match.view_name == 'homepage' %} active{% endif %}" aria-current="page" href="/">{% translate 'Home' %}</a></li>
+                        <li class="nav-item"><a class="nav-link{% if request.resolver_match.view_name == 'news_list' %} active{% endif %}" aria-current="page" href="{% url 'news_list' %}">{% translate 'News' %}</a></li>
+                        <li class="nav-item"><a class="nav-link{% if request.resolver_match.view_name == 'article_list' %} active{% endif %}" aria-current="page" href="{% url 'article_list' %}">{% translate 'Articles' %}</a></li>
+                        <li class="nav-item"><a class="nav-link{% if request.resolver_match.view_name == 'protected' %} active{% endif %}" aria-current="page" href="{% url 'protected' %}">{% translate 'Protected page' %}</a></li>
+                    </ul>
+                </div>
+                {% endcache %}
+                <form class="form-inline" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                    <input name="next" type="hidden" value="{{ redirect_to }}">
+                    <select class="form-control mx-2" name="language" id="language" onchange="$(this).parent().submit()">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                {{ language.name_local }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <form class="form-inline"  action="{% url 'set_timezone' %}" method="POST">
+                    {% csrf_token %}
+                    <select class="form-control mx-2" style="width: 150px;" name="timezone" onchange="$(this).parent().submit()">
+                        {% for tz in timezones %}
+                        <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ tz }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% if request.user.is_authenticated %}
+                    <span class="navbar-text mx-2">{% translate 'You are logged in as' %}:</span>
+                    <a class="navbar-text{% if request.resolver_match.view_name == 'profile' %} active{% endif %}" aria-current="page" href="{% url 'profile' %}">
+                        <i class="fa-solid fa-user"></i>
+                        {{ request.user.username }}
+                    </a>
+                    {% cache 86400 menu_not_authenticated_block1 LANGUAGE_CODE request.resolver_match.view_name %}
+                    <span class="navbar-text mx-2">|</span>
+                    <a class="navbar-text{% if request.resolver_match.view_name == 'logout' %} active{% endif %}" aria-current="page" href="{% url 'logout' %}">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        {% translate 'Logout' %}
+                    </a>
+                    {% endcache %}
+                {% else %}
+                    {% cache 86400 menu_not_authenticated_block2 LANGUAGE_CODE request.resolver_match.view_name %}
+                    <a class="navbar-text{% if request.resolver_match.view_name == 'login' %} active{% endif %}" aria-current="page" href="{% url 'login' %}">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        {% translate 'Login' %}
+                    </a>
+                    <span class="navbar-text mx-2">|</span>
+                    <a class="navbar-text{% if request.resolver_match.view_name == 'signup' %} active{% endif %}" aria-current="page" href="{% url 'signup' %}">
+                        <i class="fa-solid fa-user-plus"></i>
+                        {% translate 'Sign Up' %}
+                    </a>
+                    {% endcache %}
+                {% endif %}
+            </div>
+        </nav>
+        {% endblock menu %}
+        <main role="main" class="container">
+            <div class="text-right mb-1">
+                <span class="small">{{ current_time|timezone:TIME_ZONE }} ({{ TIME_ZONE }})</span>
+            </div>
+            {% bootstrap_messages %}
+            {% block content %}
+            {% endblock content %}
+        </main>
+    </body>
+</html>

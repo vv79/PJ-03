@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+
+{% load tz %}
+
+{% block title %}Announcement details{% endblock title %}
+
+{% block content %}
+    <h1>{{ announcement.title }}</h1>
+    <hr />
+    <h3>{{ announcement.date_created|date:"d M Y" }}</h3>
+    <hr />
+    <a href="{% url 'response_create' announcement=announcement.id %}" class="btn btn-success">Create response</a>
+    <a href="{% url 'announcement_edit' pk=announcement.id %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'announcement_delete' pk=announcement.id %}" class="btn btn-danger">Delete</a>
+    <hr />
+    {{ announcement.content }}
+{% endblock content %}

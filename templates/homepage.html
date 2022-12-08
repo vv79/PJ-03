@@ -1,0 +1,10 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+{% load i18n %}
+
+{% block title %}{% blocktranslate asvar page_title %}Homepage{% endblocktranslate %}{% endblock title %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+{% endblock content %}
