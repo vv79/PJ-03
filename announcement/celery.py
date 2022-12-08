@@ -20,6 +20,6 @@ app.conf.beat_schedule = {
     },
     'send_cron_subscribers_messages_every_monday_8am': {
         'task': 'board.tasks.send_cron_subscribers_messages',
-        'schedule': crontab(day_of_week="thu", hour="15", minute="33"),
+        'schedule': crontab(day_of_week="mon", hour="08", minute="00"),
     }
 }
